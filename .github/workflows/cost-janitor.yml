@@ -1,0 +1,34 @@
+name: Cost Janitor
+
+on:
+  pull_request:
+
+jobs:
+  janitor:
+    runs-on: ubuntu-latest
+
+    services:
+      localstack:
+        image: localstack/localstack
+        ports:
+          - 4566:4566
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - run: pip install terraform-local
+
+      - run: |
+          cd terraform
+          tflocal init
+          tflocal apply -auto-approve
+
+      - run: |
+          cd janitor
+          python janitor.py
