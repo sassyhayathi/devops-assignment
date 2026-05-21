@@ -1,0 +1,1 @@
+EBS_PRICE_PER_GB = 0.08
